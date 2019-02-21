@@ -2,11 +2,12 @@ import React from 'react';
 import { 
   StyleSheet, 
   Text, 
-  TextInput, 
   View, 
   Platform,
   KeyboardAvoidingView,
 } from 'react-native';
+
+import SearchInput from './components/SearchInput';
 
 export default class App extends React.Component {
   render() {
@@ -24,13 +25,7 @@ export default class App extends React.Component {
           <Text style={[styles.largeText, styles.textStyle]}>
             54°
           </Text>
-          <TextInput
-            autoCorrect={false} 
-            placeholder="Search a city" 
-            placeholderTextColor="white" 
-            style={styles.textInput} 
-            clearButtonMode="always"
-          />
+          <SearchInput placeholder="Search any city"/>
         </KeyboardAvoidingView>
       </View>
     );
