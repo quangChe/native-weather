@@ -10,7 +10,7 @@ const images = {
   Showers: require('../assets/showers.png'),
   Sleet: require('../assets/sleet.png'),
   Snow: require('../assets/snow.png'),
-  Thunder: require('../assets/thunder.png'),
+  Thunder: require('../assets/thunder.png')
 };
 
 export default weather => images[weather];
