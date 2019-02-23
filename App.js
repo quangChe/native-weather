@@ -28,27 +28,16 @@ export default class App extends React.Component {
   }
 
   componentDidMount() {
-    this.handleUpdateLocation('San Diego');
+    this.handleUpdateLocation('Los Angeles');
   }
 
   handleUpdateLocation = async newLocation => {
     this.setState({loading: true});
     const id = await fetchLocationId(newLocation);
-    fetchWeather(id)
-      .then(data => {
-        const wData = data;
-        wData.temperature = data.temperature.toFixed(0);
-        return this.setState({...wData, loading: false});
-      })
-      .catch(err => {
-        console.error(err);
-        return this.setState({
-          location: '',
-          temperature: null,
-          weather: '',
-          loading: true
-        });
-      })
+    if (!id) return this.setState({loading: false});
+    const wData = await fetchWeather(id);
+    wData.temperature = ((wData.temperature * 9/5) + 32).toFixed(0);
+    return this.setState({...wData, loading: false});
   }
 
   render() {
@@ -60,7 +49,6 @@ export default class App extends React.Component {
         behavior="padding">
         
         <ImageBackground
-          fadeDuration="4s"
           source={getImageForWeather(this.state.weather)}
           style={styles.imageContainer}
           imageStyle={styles.image}>
@@ -74,7 +62,7 @@ export default class App extends React.Component {
             </Text>
             {
               this.state.loading 
-              ? <ActivityIndicator size="large" color="rgba(0, 0, 0, 0.8)"/>
+              ? <ActivityIndicator size="large" color="rgba(255, 255, 255, 0.9)"/>
               : <Text style={[styles.largeText, styles.textStyle]}>
                   {temperature}&deg;F
                 </Text>
@@ -107,7 +95,7 @@ const styles = StyleSheet.create({
   detailsContainer: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     paddingHorizontal: 20,
     marginTop: -60
   },

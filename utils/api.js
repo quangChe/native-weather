@@ -3,7 +3,7 @@ export const fetchLocationId = async city => {
     `https://www.metaweather.com/api/location/search/?query=${city}`,
   );
   const locations = await response.json();
-  return locations[0].woeid;
+  return locations[0] ? locations[0].woeid : null;
 };
 
 export const fetchWeather = async woeid => {
