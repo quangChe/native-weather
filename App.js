@@ -18,15 +18,12 @@ import {fetchLocationId, fetchWeather} from './utils/api';
 
 
 export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      location: '',
-      temperature: null,
-      weather: '',
-      loading: false,
-      error: false
-    }
+  state = {
+    location: '',
+    temperature: null,
+    weather: '',
+    loading: false,
+    error: false
   }
 
   componentDidMount() {
