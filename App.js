@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
+  StatusBar
 } from 'react-native';
 
 import getImageForWeather from './utils/img_gallery';
@@ -23,7 +24,8 @@ export default class App extends React.Component {
       location: '',
       temperature: null,
       weather: '',
-      loading: true
+      loading: false,
+      error: false
     }
   }
 
@@ -31,46 +33,81 @@ export default class App extends React.Component {
     this.handleUpdateLocation('Los Angeles');
   }
 
-  handleUpdateLocation = async newLocation => {
-    this.setState({loading: true});
-    const id = await fetchLocationId(newLocation);
-    if (!id) return this.setState({loading: false});
-    const wData = await fetchWeather(id);
-    wData.temperature = ((wData.temperature * 9/5) + 32).toFixed(0);
-    return this.setState({...wData, loading: false});
+  handleUpdateLocation = newLocation => {
+    if (!newLocation) return;  
+
+    this.setState({loading: true}, async () => {
+      try {
+        const id = await fetchLocationId(newLocation);
+        let {location, weather, temperature} = await fetchWeather(id);
+        temperature = ((temperature * 9/5) + 32).toFixed(0);
+        this.setState({
+          loading: false, 
+          error: false,
+          weather,
+          location,
+          temperature
+        });
+      } catch(e) {
+        this.setState({loading: false, error: true});
+      }
+    })
   }
 
   render() {
-    const {location, weather, temperature} = this.state;
+    const {
+      location, 
+      weather, 
+      temperature,
+      loading,
+      error
+    } = this.state;
 
     return (
       <KeyboardAvoidingView
         style={styles.container}
         behavior="padding">
-        
+        <StatusBar barStyle="light-content" />
         <ImageBackground
           source={getImageForWeather(this.state.weather)}
           style={styles.imageContainer}
           imageStyle={styles.image}>
-
+          
           <View style={styles.detailsContainer}>
-            <Text style={[styles.largeText, styles.textStyle, styles.special]}>
-              {this.state.loading ? '' : location}
-            </Text>
-            <Text style={[styles.smallText, styles.textStyle]}>
-              {this.state.loading ? '' : weather}
-            </Text>
-            {
-              this.state.loading 
-              ? <ActivityIndicator size="large" color="rgba(255, 255, 255, 0.9)"/>
-              : <Text style={[styles.largeText, styles.textStyle]}>
-                  {temperature}&deg;F
-                </Text>
-                }
-            
-            <SearchInput 
-              placeholder="Search any city"
-              onSubmission={this.handleUpdateLocation}/>
+            <ActivityIndicator 
+              animating={loading}
+              size="large" 
+              color="rgba(255, 255, 255, 0.9)"/>
+
+            { !loading && (
+              <View>
+                {error && (
+                  <Text style={[styles.smallText, styles.textStyle]}>
+                    Could not load weather, please try a different
+                    city.
+                  </Text>
+                )}
+
+                {!error && (
+                  <View>
+                    <Text style={[styles.largeText, styles.textStyle, styles.special]}>
+                      {location}
+                    </Text>
+                    <Text style={[styles.smallText, styles.textStyle]}>
+                      {weather}
+                    </Text>
+                    <Text style={[styles.largeText, styles.textStyle]}>
+                      {temperature}&deg;F
+                    </Text>
+                  </View>
+                )}
+
+                <SearchInput 
+                  placeholder="Search any city"
+                  onSubmission={this.handleUpdateLocation}/>
+              </View>
+            )}
+          
           </View>            
         </ImageBackground>
       </KeyboardAvoidingView>
