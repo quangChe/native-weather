@@ -2,7 +2,7 @@
 
 A basic mobile app that simply displays the current weather of a searched location using real weather data. 
 
-The app is compatible with both Android and iOS. It is built using React Native with Expo. 
+The app is compatible with both Android and iOS. It is built using React Native with Expo tools. 
 
 
 ## Getting Started
@@ -16,10 +16,9 @@ Expo is a library of tools and services built around React Native to build nativ
 
 ### 2. Boot Up Expo Dev Tools
 ```
-cd native-weather
 npm install
 npm start
 ```
 
-To view the development build of the app, first install all necessary packages and start up the Expo Development Tools. Expo will open in the browser where it will host the app through various methods to be viewed on iOS Simulator, an Android Virtual Device, or from the Expo mobile app.
+Expo will build the project and open a DevTools interface inside your browser. The project app can then be inspected locally on iOS Simulator or Android Virtual Device. Atlernatively, Expo provides sets up a tunnel for viewing the app through a mobile device via the Expo app, which can be downloaded from the App Store or Google Play.
 
